@@ -1,5 +1,5 @@
 CC = gcc #компилятор
-CFLAGS = -c -Wall #флаги для компилятора
+CFLAGS = -c -Wall #ключи для компилятора
 SOURCES = playing_with_struct.c
 OBJECTS = $(SOURCES:.c = .o)
 EXECUTABLE = test.exe
