@@ -32,7 +32,7 @@ int main()
 		fgets(buff, 3, stdin);
 		command_num = buff[0] - 48;
 		
-		printf("op%d(%d, %d)\n", command_num, first_number, second_number);
+		//printf("op%d(%d, %d)\n", command_num, first_number, second_number);
 		switch(command_num){
 			case 1:
 				catcher = Add(first_number, second_number, result_ptr);
