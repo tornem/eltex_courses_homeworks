@@ -3,13 +3,13 @@
 
 int main()
 {	
-	char buff[12];
+	char buff[255];
 	int first_number;
 	int second_number;
 	int command_num;
 	int result = 0;
-	double result_f = 0;
 	int* result_ptr = &result;
+	double result_f = 0;
 	double* result_f_ptr = &result_f;
 	int catcher = 0;
 	int end = 1;
@@ -17,9 +17,9 @@ int main()
 	while(end){
 		printf("Enter two numbers:\n");
 
-		fgets(buff, 12, stdin);
+		fgets(buff, 255, stdin);
 		first_number = atoi(buff);
-		fgets(buff, 12, stdin);
+		fgets(buff, 255, stdin);
 		second_number = atoi(buff);
 
 		printf("Enter the command number for further action: \n");
@@ -29,7 +29,7 @@ int main()
 		printf("(4) Division\n");
 		printf("(0) Quit\n");
 
-		fgets(buff, 2, stdin);
+		fgets(buff, 3, stdin);
 		command_num = buff[0] - 48;
 		
 		switch(command_num){
