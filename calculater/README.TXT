@@ -1,1 +1,1 @@
-Простейший калькулятор с использованием всех функций в качестве сторонней статической библиотеки. 
+Simple colculater are using shared objects,  positional independent code and static bind  
