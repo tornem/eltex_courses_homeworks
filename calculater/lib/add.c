@@ -1,4 +1,5 @@
 #include <limits.h>
+#include "../arithmetic.h"
 
 int Add(int first_summand, int second_summand, int* result)
 {
