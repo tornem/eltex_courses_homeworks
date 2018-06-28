@@ -5,12 +5,16 @@ SOURCES := $(wildcard *.c)
 OBJECTS := $(SOURCES:.c=.o)
 TARGET = calculater.exe
 VPATH = lib
-LIB = ./lib/libcalc.a
+LIB = libcalc.a
 
 all:$(TARGET) 
+#определяю libcalc.a как первый пререквезит чтоб его можно было хватануть "$<"
+#иначе VPATH вообще не ищет. Тоже не понимаю, почему.
+$(TARGET):$(LIB) $(OBJECTS) 
+	$(CC) $(OBJECTS) $(CFLAGS) $@ $<
 
-$(TARGET):$(OBJECTS) 
-	$(CC) $(OBJECTS) $(CFLAGS) $@ $(LIB)
+$(LIB):
+	$(MAKE) -C $(VPATH)
 
 %.o:%.c
 	$(CC) -c $< $(CFLAGS) $@
@@ -18,7 +22,4 @@ $(TARGET):$(OBJECTS)
 $(OBJECTS):$(HEADER)
 
 clean:
-	rm $(OBJECTS)
-
-cleanA:
 	rm $(OBJECTS) $(TARGET)
