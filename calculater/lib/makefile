@@ -1,17 +1,18 @@
 CC = gcc
-CFLAGS = -o
+CFLAGS = -o 
+LFLAGS = -c -fpic
 SOURCES = $(wildcard *.c)
 #OBJECTS = $(patsubst %.c, %.o, $(SOURCES)) 
 OBJECTS = $(SOURCES:.c=.o) 
-TARGET = libcalc.a
+TARGET = libcalc.so
 
 all:$(TARGET)
 
 $(TARGET):$(OBJECTS)
-	ar -rc $@ $(OBJECTS)
+	$(CC) -shared $(CFLAGS) $@ $(OBJECTS)
 
 %.o:%.c
-	$(CC) -c $< $(CFLAGS) $@	
+	$(CC) $(LFLAGS) $< $(CFLAGS) $@	
 
 clean:
 	rm $(OBJECTS)
