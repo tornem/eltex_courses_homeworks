@@ -12,7 +12,4 @@ $(TARGET):$(OBJECTS)
 	$(CC) -c $< $(CFLAGS) $@	
 
 clean:
-	rm $(OBJECTS)
-
-cleanA:
 	rm $(OBJECTS) $(TARGET)
