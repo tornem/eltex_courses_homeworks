@@ -5,9 +5,9 @@ SOURCES = $(wildcard *.c)
 OBJECTS = $(SOURCES:.c=.o) 
 TARGET = libcalc.a
 
-all:$(TARGET)
+all:$(TARGET)($(OBJECTS))
 
-$(TARGET):$(OBJECTS)
+$(TARGET)($(OBJECTS)):$(OBJECTS)
 	ar -rc $@ $(OBJECTS)
 
 %.o:%.c

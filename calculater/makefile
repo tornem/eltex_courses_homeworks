@@ -4,12 +4,13 @@ HEADER := $(wildcard *.h)
 SOURCES := $(wildcard *.c)
 OBJECTS := $(SOURCES:.c=.o)
 TARGET = calculater.exe
-DIR := lib/libcalc.a
+VPATH = lib
+LIB = ./lib/libcalc.a
 
 all:$(TARGET) 
 
-$(TARGET):$(OBJECTS)
-	$(CC) $(OBJECTS) $(CFLAGS) $@ $(DIR)
+$(TARGET):$(OBJECTS) 
+	$(CC) $(OBJECTS) $(CFLAGS) $@ $(LIB)
 
 %.o:%.c
 	$(CC) -c $< $(CFLAGS) $@
