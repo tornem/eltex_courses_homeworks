@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -o 
+CFLAGS = -g 
 HEADER := $(wildcard *.h)
 SOURCES := $(wildcard *.c)
 OBJECTS := $(SOURCES:.c=.o)
@@ -17,7 +17,7 @@ $(LIB):
 	$(MAKE) -C $(VPATH)
 
 %.o:%.c
-	$(CC) -c $< $(CFLAGS) $@
+	$(CC) -c $< $(CFLAGS) -o $@
 
 $(OBJECTS):$(HEADER)
 

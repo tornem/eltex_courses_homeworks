@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -o
+CFLAGS = -Wall
 SOURCES = $(wildcard *.c)
 #OBJECTS = $(patsubst %.c, %.o, $(SOURCES)) 
 OBJECTS = $(SOURCES:.c=.o) 
@@ -9,7 +9,7 @@ $(TARGET):$(OBJECTS)
 	ar -rc $@ $?
 
 %.o:%.c
-	$(CC) -c $< $(CFLAGS) $@	
+	$(CC) -c $< -o $@	
 
 clean:
 	rm $(OBJECTS) $(TARGET)
