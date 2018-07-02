@@ -11,7 +11,7 @@ all:$(TARGET)
 #определяю libcalc.a как первый пререквезит чтоб его можно было хватануть "$<"
 #иначе VPATH вообще не ищет. Тоже не понимаю, почему.
 $(TARGET):$(LIB) $(OBJECTS) 
-	$(CC) $(OBJECTS) $(CFLAGS) $@ $<
+	$(CC) $(OBJECTS) $(CFLAGS) -o $@ $<
 
 $(LIB):
 	$(MAKE) -C $(VPATH)
