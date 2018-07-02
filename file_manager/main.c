@@ -19,4 +19,19 @@ int main()
 	//keypad();
 	//noecho();
 	getmaxyx(stdscr, max_y, max_x);
+	init_pair(1, COLOR_BLACK, COLOR_BLUE);
+
+	//initialisation half-main windows
+	init_main_win(&w_main[0],&w_main[1], max_y, max_x);
+
+	//draw stdscr and half-main windows
+	wnoutrefresh(stdscr);
+	wnoutrefresh(w_main[0]);
+	wnoutrefresh(w_main[1]);
+	doupdate();
+
+	getch();
+	endwin();
+
+	return 0;
 }
