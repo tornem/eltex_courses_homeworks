@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
 	start_color();
 	init_pair(1, COLOR_BLACK, COLOR_GREEN);
 	bkgd(COLOR_PAIR(1));
-	curs_set(TRUE); 
+	curs_set(2); 
 	printw("%s", read_buf);
 	noecho();
 	cbreak();
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	top_panel(panel_mode[0]);
 	update_panels();
 	doupdate();	
-
+	move(0,0);
 	while ((key = getch()) != 'q'){
 		if (key == 'i'){
 			top_panel(panel_mode[1]);
@@ -114,9 +114,11 @@ int main(int argc, char* argv[])
 				CallHelp(&w_statusbar, &panel_help);
 				break;
 		}
-		top_panel(panel_mode[0]);
-		update_panels();
-		doupdate();
+		 // top_panel(panel_mode[0]);
+		 // update_panels();
+		 // doupdate();
+
+		 // move(y, x);
 	}
 	// FILE *fp;
 	// fp = fdopen(fd, "w+");

@@ -78,20 +78,20 @@ void CallHelp(WINDOW** w_statusbar, PANEL** panel_help)
 {
 	int key;
 	//WINDOW* bind_win = panel_window(panel_help);
-	curs_set(FALSE);
+	//curs_set(FALSE);
 	show_panel(*panel_help);
 	update_panels();
-	doupdate();
 	wclear(*w_statusbar);
 	wprintw(*w_statusbar, "Press h again for close help");
-	wrefresh(*w_statusbar);
+	wnoutrefresh(*w_statusbar);
+	doupdate();
 	if ((key = getch()) == 'h'){
 		hide_panel(*panel_help);
 		update_panels();
-		doupdate();
 		wclear(*w_statusbar);
 		wprintw(*w_statusbar, "Press 'h' for help");
-		wrefresh(*w_statusbar);
+		wnoutrefresh(*w_statusbar);
+		doupdate();
 	}
-	curs_set(TRUE);
+	//curs_set(TRUE);
 }
