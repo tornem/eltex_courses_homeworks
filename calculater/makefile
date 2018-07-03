@@ -21,5 +21,6 @@ $(LIB):
 
 $(OBJECTS):$(HEADER)
 
-clean:
+clean: 
+	$(MAKE) -C $(VPATH) clean
 	rm $(OBJECTS) $(TARGET)
