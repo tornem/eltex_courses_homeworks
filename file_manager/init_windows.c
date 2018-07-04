@@ -1,4 +1,4 @@
-#include "main.h"
+#include "common.h"
 
 void Init_main_win(WINDOW** win_main_1, WINDOW** win_main_2, 
 											int max_y, int max_x)  
