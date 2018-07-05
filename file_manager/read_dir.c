@@ -1,19 +1,23 @@
 #define _DEFAULT_SOURCE
 #include "common.h"
 
-void ListDir (char* dir_name, struct dirent*** name_list, int* cnt_dir)
+void ListDir (struct PmPanel* win)
 {
-	*cnt_dir = scandir(dir_name, name_list, NULL, alphasort);
-		if (*cnt_dir == -1) {
+	win->dir_num = scandir(win->start_dir, &(win->name_list), 
+											NULL, alphasort);
+		if (win->dir_num == -1) {
 			perror("scandir");
 			exit(EXIT_FAILURE);
 		}
+
+	win->y = 1;
+	win->x = 1;
 }
 
-void RenderingListDir (WINDOW* win, struct dirent** name_list, 
-													int cnt_dir)
-{
-	for (int cnt = 0; cnt < cnt_dir; ++cnt) {
-		mvwprintw(win, cnt+1, 1, "%s", name_list[cnt]->d_name);
+void RenderingListDir (struct PmPanel* win)
+{	
+
+	for (int cnt = 0; cnt < win->dir_num && cnt < 21; ++cnt) {
+		mvwprintw(win->w_half, cnt+1, 1, "%s", win->name_list[cnt]->d_name);
 	}
 }

@@ -9,12 +9,29 @@
 #include <stdio.h>
 #include <dirent.h>
 
-void Init_main_win(WINDOW** win_main_1, WINDOW** win_main_2, 
-									  int max_y, int max_x);
+struct PmPanel {
+	
+	WINDOW* w_half;
 
-void ListDir (char* dir_name, struct dirent*** name_list, int* cnt_dir);
+	unsigned int y;
 
-void RenderingListDir (WINDOW* win, struct dirent** name_list, 
-													int cnt_dir);
+	unsigned int x;
+
+	struct dirent** name_list;
+
+	int dir_num; //number of directory entries
+
+	char* start_dir;
+
+	bool active;
+
+};
+
+void Init_main_win(struct PmPanel* w_half, int max_y, int max_x, 
+													int x_coor);
+
+void ListDir (struct PmPanel* win);
+
+void RenderingListDir (struct PmPanel* win);
 
 #endif
