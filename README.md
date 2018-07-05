@@ -1,2 +1,2 @@
 # eltex_courses_homeworks
-A text editor on linux using ncurses
+Completed tasks during the course ELTEX
