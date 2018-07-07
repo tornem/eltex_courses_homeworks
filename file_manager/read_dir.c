@@ -3,7 +3,6 @@
 
 int ListDir (struct PmPanel* win, WINDOW* status)
 {
-	win->work_dir = win->current_dir;
 	if ( !(strcmp(win->current_dir, "..")) ) {
 		chdir(win->work_dir);
 		chdir("..");
@@ -17,9 +16,11 @@ int ListDir (struct PmPanel* win, WINDOW* status)
 		if (temp_dir_num == -1) {
 			wprintw(status, "Cant open this file/directory %s", win->name_list[win->current_obj]->d_name);
 			wnoutrefresh(status);
+			
 			doupdate();
 			return -1;
 		} else {
+			win->work_dir = win->current_dir;
 			win->dir_num = temp_dir_num;
 			win->work_dir = win->current_dir;
 			win->size = getmaxy(win->w_half) - 2;

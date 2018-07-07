@@ -137,7 +137,7 @@ int main(int argc, char** argv)
 					wnoutrefresh(right_win.w_half);
 				}
 				break;
-			case 9:  //9 - code for TAB symbol
+			case 9:  //9 - code for TAB symboladded the possibility of a scrollingadded the possibility of a scadded the possibility of a scrolling upadded the possibility of a scrolling upadded the possibility of a scrolling upadded the possibility of a scrolling uprolling up up
 				if (left_win.active) {
 					left_win.active = FALSE;
 					wchgat(left_win.w_half, -1, A_DIM, 1, NULL);
