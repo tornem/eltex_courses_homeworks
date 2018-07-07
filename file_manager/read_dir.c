@@ -15,7 +15,7 @@ int ListDir (struct PmPanel* win, WINDOW* status)
 	int temp_dir_num = scandir(win->current_dir, &(win->name_list), 
 											NULL, alphasort); 
 		if (temp_dir_num == -1) {
-			wprintw(status, "Cant open this file/directory");
+			wprintw(status, "Cant open this file/directory %s", win->name_list[win->current_obj]->d_name);
 			wnoutrefresh(status);
 			doupdate();
 			return -1;
@@ -58,7 +58,7 @@ void CoordControl (struct PmPanel* win)
 			win->list_begin++;  //увеличение верхней границы буфера отображения файлов в директории
 			win->list_end++;  //тоже только с нижней границей
 			win->y = win->size - 1;  //установка курсора в конец окна
-			if (win->list_end > win->dir_num) {  
+			if (win->current_obj >= win->dir_num) {  
 			//объекты в директории закончились
 				win->y = 1;  //установка курсора в начало окна
 				win->current_obj = 1;  //drop 
@@ -66,12 +66,21 @@ void CoordControl (struct PmPanel* win)
 				win->list_end = win->size;  //установка верхней границы
 			}
 			RenderingListDir(win);
-		} else if (win->y < 1) {
+		} else if ((win->y) < 1) {
 		//достигнут верхний край экрана
-			win->y = win->dir_num - 1;  //установка курсора на самый последний объект в директории
-			win->current_obj = win->y;  //drop co in end
-			win->list_begin = win->y - win->size;  //сдвиг нижней границы буфера на размер окна
-			win->list_end = win->dir_num - 1;  //установка верхней границы буфера 
+			if ((win->current_obj) > 0) {
+			//и это не первый файл директории
+			//то осуществляем скрол вверх
+				--win->list_begin;
+				--win->list_end;
+				win->y = 1;
+			} else {
+			//и это первый файл в директории
+				win->y = win->size - 1;  //установка курсора на самый последний объект в директории
+				win->list_begin = win->dir_num - win->size;  //сдвиг нижней границы буфера на размер окна
+				win->list_end = win->dir_num - 1;  //установка верхней границы буфера 
+				win->current_obj = win->dir_num - 1;  //drop co in end
+			}
 			RenderingListDir(win);  //переотрисовка окна
 		}
 	} else {  

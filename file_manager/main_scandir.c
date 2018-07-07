@@ -49,7 +49,10 @@ int main(int argc, char** argv)
 		left_win.current_dir = buff_curr_dir;
 		right_win.current_dir = getenv("HOME");
 	} else {
-		left_win.current_dir = argv[1];
+		exit(EXIT_FAILURE);
+		printf("Sorry, the introduction of additional arguments is not yet implemented\n");
+		// left_win.current_dir = argv[1];
+		// right_win.current_dir = getenv("HOME");
 	}
 	ListDir(&left_win, help_bar);
 	ListDir(&right_win, help_bar);
@@ -155,8 +158,6 @@ int main(int argc, char** argv)
 				if (left_win.active) {
 					left_win.current_dir = left_win.name_list[left_win.current_obj]->d_name;
 					wclear(help_bar);
-					//wprintw(help_bar, left_win.current_dir);
-					// wprintw(right_win.w_half, "%s\n", left_win.current_dir);
 					if (ListDir(&left_win, help_bar) == -1) {
 						break;
 					} else {
@@ -169,8 +170,6 @@ int main(int argc, char** argv)
 				} else {
 					right_win.current_dir = right_win.name_list[right_win.current_obj]->d_name;
 					wclear(help_bar);
-					//wprintw(help_bar, right_win.current_dir);
-					// wprintw(right_win.w_half, "%s\n", left_win.current_dir);
 					if (ListDir(&right_win, help_bar) == -1) {
 						break;
 					} else {
