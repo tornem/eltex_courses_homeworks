@@ -25,7 +25,7 @@ Completed tasks during the course ELTEX
     
 6. thread - задания связанные с потоками в Linux
 
-    6.1 - five_threads(TODO) запуск 5-ти потоков каждый выводит свой номер
+    6.1 - five_threads - запуск 5-ти потоков каждый выводит свой номер
     
     6.2 - (TODO) Эмуляция жизни. Работа склада.
     
