@@ -4,7 +4,7 @@ LFLAGS = -lpthread
 HEADER := $(wildcard *.h)
 SOURCES := $(wildcard *.c)
 OBJECTS := $(SOURCES:.c=.o)
-TARGET = five_threads.exe
+TARGET = storage_live.exe
 #VPATH = lib
 #LIB = libcalc.a
 

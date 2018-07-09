@@ -8,22 +8,30 @@
 
 int main ()
 {
-	//unsigned int rooms[NUM_OF_ROOMS];  // init storage
-	unsigned int success_start_loader;
+	// next 4 unsig ints use for check pthread family fucntions
+	unsigned int success_start_loader; 
 	unsigned int success_start_buyer;
 	unsigned int success_attr_init;
 	unsigned int success_mutex_init;
-	pthread_t tid_loader;
-	pthread_t tid_buyer[NUM_OF_BUYERS];  //init tid`s for 4 buyers
+	
+	pthread_t tid_loader;  // init 
+	pthread_t tid_buyer[NUM_OF_BUYERS];  // init tid`s for 4 buyers
 	pthread_attr_t attr;  // thread attribuite 
-	//pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;  // init mutex by default attr
+	pthread_mutex_t mutex_dupe = PTHREAD_MUTEX_INITIALIZER;  // init mutex by default attr
+															 // for dupe in struct storage store
 
-	struct storage store;  //init storage
+	setbuf(stdout, NULL);
+
+	struct storage store;  // init storage
+
+	for (int i = 0; i < NUM_OF_ROOMS; ++i) {
+		store.mutex[i] = mutex_dupe;  // copy mutex
+	}
 
 	srand(time(NULL));  // set seed
 	
-	if ((success_attr_init = pthread_attr_init(&attr)) != 0) { // initializes default threads attributes
-		perror("pthread_attr_init");
+	if ((success_attr_init = pthread_attr_init(&attr)) != 0) { // initializes default 
+		perror("pthread_attr_init");						   // attributes for threds
 		return EXIT_FAILURE;
 	}  
 
@@ -52,6 +60,7 @@ int main ()
 	}
 	pthread_cancel(tid_loader);
 	pthread_join(tid_loader, NULL);
+	printf("\n%sAll buyers going away, good job!%s\n",KMAG, KNRM);
 	//printf ("%d", store.rooms[3]);
 
 	return 0;
