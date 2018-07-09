@@ -27,6 +27,7 @@ void* loader(void* argv) {
 				printf("%sRoom #%d is not empty%s\n", KRED, i, KNRM);
 			}
 		}
+		//storage_control(*store);
 	}
 	//pthread_mutex_unlock(&(store->mutex));
 	pthread_exit(EXIT_SUCCESS);

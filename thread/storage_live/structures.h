@@ -21,10 +21,12 @@ struct storage
 {
 	unsigned int rooms[NUM_OF_ROOMS];
 
-	pthread_mutex_t mutex[NUM_OF_ROOMS];
+	pthread_mutex_t mutex[NUM_OF_BUYERS + 1];  // number of buyers + 1 loader thread
 
 	char color[8];
 
 };
+
+void storage_control(struct storage store);
 
 #endif

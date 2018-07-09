@@ -8,7 +8,7 @@ void* buyer(void* argv) {
 	srand(time(NULL));
 	struct storage* store = (struct storage*)argv;
 	int num = pthread_self() % 1000;
-	int demand = 10000;  // customer demand for the product
+	int demand = 5000;  // customer demand for the product
 
 	printf("\n%sBuyer #%d welcome!%s\n", KCYN, num, KNRM);
 	while (demand > 0) {  
@@ -21,12 +21,13 @@ void* buyer(void* argv) {
 				store->rooms[n] = 0;		   // from room
 				printf("%s#%d: My demand now = %d%s\n", KGRN, num, demand, KNRM);
 				pthread_mutex_unlock(&(store->mutex[n]));  // free room
-				sleep(2);
+				sleep(3);
 			} else {
 				printf("%s#%d: Tried go room #%d, but she`s busy%s\n", KYEL, num, n, KNRM);
-				sleep(1);
+				sleep(2);
 			}
 		}
+		//sleep(2);
 	}
 
 	printf("\n%sBuyer #%d good buy!%s\n\n", KCYN, num, KNRM);

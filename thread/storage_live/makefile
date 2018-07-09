@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g 
+CFLAGS = -g -std=c99
 LFLAGS = -lpthread
 HEADER := $(wildcard *.h)
 SOURCES := $(wildcard *.c)
