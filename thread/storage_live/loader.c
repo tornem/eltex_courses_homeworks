@@ -17,6 +17,7 @@ void* loader(void* argv) {
 					printf("%sLoader working in room #%u%s\n", KRED, i, KNRM); 					// room free go inside
 					store->rooms[i] = 400 + (rand() % 201);  // filling a room
 					pthread_mutex_unlock(&(store->mutex[i]));  // free room
+					storage_control(*store);
 					sleep(1);
 				} else {
 					printf("%sUps, buyer occupied room #%d, waiting..%s\n", KRED, i, KNRM);
@@ -27,7 +28,6 @@ void* loader(void* argv) {
 				printf("%sRoom #%d is not empty%s\n", KRED, i, KNRM);
 			}
 		}
-		//storage_control(*store);
 	}
 	//pthread_mutex_unlock(&(store->mutex));
 	pthread_exit(EXIT_SUCCESS);

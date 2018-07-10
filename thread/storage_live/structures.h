@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #define NUM_OF_ROOMS 5
-#define NUM_OF_BUYERS 4
+#define NUM_OF_BUYERS 3
 
 
 #define KNRM  "\x1B[0m"
@@ -22,9 +22,13 @@ struct storage
 	unsigned int rooms[NUM_OF_ROOMS];
 
 	pthread_mutex_t mutex[NUM_OF_BUYERS + 1];  // number of buyers + 1 loader thread
+};
 
-	char color[8];
+struct thread_param
+{
+	unsigned int id;
 
+	struct storage* store; 	
 };
 
 void storage_control(struct storage store);
