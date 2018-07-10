@@ -14,24 +14,20 @@
 
 struct PmPanel {
 	
-	WINDOW* w_half;
-	WINDOW* w_dir;
+	WINDOW* w_half;  // panel of window
+	WINDOW* w_dir;  // top-side window showing current directory
 
-	unsigned int y;
+	unsigned int y;  
 	unsigned int x;
-	unsigned int current_obj;
-	unsigned int list_begin;
-	unsigned int list_end;
+	unsigned int selected_obj;  // number of the select object
+	unsigned int list_begin;  // up-border of visible screen
+	unsigned int list_end;  // bottom border
+	unsigned int dir_num; // number of directory entries
+	unsigned int size;  // useful panel of window size
 
-	unsigned int size;
+	struct dirent** name_list;  // list of object inside directory from scandir()
 
-	struct dirent** name_list;
-
-	int dir_num; //number of directory entries
-
-	char* current_dir;
-
-	char* work_dir;
+	char* work_dir;  // working directory for the process
 
 	bool active;
 
