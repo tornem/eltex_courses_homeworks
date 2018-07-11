@@ -6,7 +6,7 @@
 
 
 void* loader(void* argv) {
-	//srand(time(NULL)); 
+	srand(time(NULL)); 
 	struct storage* store = (struct storage*)argv;
 
 	printf("\n%sLoader start working!%s\n", KRED, KNRM);

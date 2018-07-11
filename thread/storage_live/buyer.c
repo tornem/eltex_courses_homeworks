@@ -6,7 +6,7 @@
 #include "structures.h"
 
 void* buyer(void* argv) {
-	//srand(time(NULL));
+	srand(time(NULL));
 	unsigned seed;
 	struct thread_param* th_id = (struct thread_param*)argv;
 	int num =  th_id->id;
@@ -26,8 +26,8 @@ void* buyer(void* argv) {
 
 	printf("\n%sBuyer #%d welcome!%s\n", color, num, KNRM);
 	while (demand > 0) {  
-		seed = time(NULL);
-		int n = rand_r(&seed) % (NUM_OF_ROOMS);  // generate random number in range [0,4]
+		//seed = time(NULL);
+		int n = rand() % (NUM_OF_ROOMS);  // generate random number in range [0,4]
 
 		if ( (th_id->store->rooms[n]) != 0) {  // buyer check random room
 			fprintf(stderr, "Thread#%d try lock room#%d\n", num, n); 
