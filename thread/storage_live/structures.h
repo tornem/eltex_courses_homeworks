@@ -17,6 +17,8 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+#define sleep(x) usleep((x) * 10000)
+
 struct storage
 {
 	unsigned int rooms[NUM_OF_ROOMS];
@@ -31,6 +33,6 @@ struct thread_param
 	struct storage* store; 	
 };
 
-void storage_control(struct storage store);
+void storage_control(struct storage *store);
 
 #endif

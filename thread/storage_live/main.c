@@ -5,20 +5,20 @@
 #include "buyer.h"
 #include "structures.h"
 
-void storage_control(struct storage store)
+void storage_control(struct storage *store)
 {
 	for (int i = 0; i < (NUM_OF_BUYERS + 1); ++i) {  // number of buyers + 1 loader thread
-		pthread_mutex_lock(&(store.mutex[i]));
+		pthread_mutex_lock(&(store->mutex[i]));
 	}  
 
 	printf("\n");
 	for (int i = 0; i < NUM_OF_ROOMS; ++i) {  // number of buyers + 1 loader thread
-		printf(" room[%d] = %d ", i, store.rooms[i]);
+		printf(" room[%d] = %d ", i, store->rooms[i]);
 	}
 	printf("\n");
 
 	for (int i = 0; i < (NUM_OF_BUYERS + 1); ++i) {  // number of buyers + 1 loader thread
-		pthread_mutex_unlock(&(store.mutex[i]));
+		pthread_mutex_unlock(&(store->mutex[i]));
 	} 
 }
 
@@ -81,7 +81,7 @@ int main ()
 	}
 	pthread_cancel(tid_loader);
 	pthread_join(tid_loader, NULL);
-	printf("\n%sAll buyers going away, good job!%s\n",KMAG, KNRM);
+	printf("\n%sAll buyers going away, good job!%s\n",KRED, KNRM);
 	//printf ("%d", store.rooms[3]);
 
 	free(threads_ids);

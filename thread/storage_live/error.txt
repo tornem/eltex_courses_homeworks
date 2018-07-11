@@ -1,0 +1,692 @@
+==4710== Memcheck, a memory error detector
+==4710== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==4710== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==4710== Command: ./storage_live.exe
+==4710== 
+--4710-- Valgrind options:
+--4710--    --leak-check=full
+--4710--    -v
+--4710-- Contents of /proc/version:
+--4710--   Linux version 4.15.0-23-generic (buildd@lgw01-amd64-055) (gcc version 7.3.0 (Ubuntu 7.3.0-16ubuntu3)) #25-Ubuntu SMP Wed May 23 18:02:16 UTC 2018
+--4710-- 
+--4710-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-avx-avx2-bmi
+--4710-- Page sizes: currently 4096, max supported 4096
+--4710-- Valgrind library directory: /usr/lib/valgrind
+--4710-- Reading syms from /home/ilyatornem/Desktop/ELTEX/thread/storage_live/storage_live.exe
+--4710-- Reading syms from /lib/x86_64-linux-gnu/ld-2.27.so
+--4710--   Considering /lib/x86_64-linux-gnu/ld-2.27.so ..
+--4710--   .. CRC mismatch (computed 1b7c895e wanted 2943108a)
+--4710--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/ld-2.27.so ..
+--4710--   .. CRC is valid
+--4710-- Reading syms from /usr/lib/valgrind/memcheck-amd64-linux
+--4710--   Considering /usr/lib/valgrind/memcheck-amd64-linux ..
+--4710--   .. CRC mismatch (computed 62965bbf wanted eeb84137)
+--4710--    object doesn't have a symbol table
+--4710--    object doesn't have a dynamic symbol table
+--4710-- Scheduler: using generic scheduler lock implementation.
+--4710-- Reading suppressions file: /usr/lib/valgrind/default.supp
+==4710== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-4710-by-ilyatornem-on-???
+==4710== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-4710-by-ilyatornem-on-???
+==4710== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-4710-by-ilyatornem-on-???
+==4710== 
+==4710== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==4710== don't want to do, unless you know exactly what you're doing,
+==4710== or are doing some strange experiment):
+==4710==   /usr/lib/valgrind/../../bin/vgdb --pid=4710 ...command...
+==4710== 
+==4710== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==4710==   /path/to/gdb ./storage_live.exe
+==4710== and then give GDB the following command
+==4710==   target remote | /usr/lib/valgrind/../../bin/vgdb --pid=4710
+==4710== --pid is optional if only one valgrind process is running
+==4710== 
+--4710-- REDIR: 0x401f2f0 (ld-linux-x86-64.so.2:strlen) redirected to 0x58060901 (???)
+--4710-- REDIR: 0x401f0d0 (ld-linux-x86-64.so.2:index) redirected to 0x5806091b (???)
+--4710-- Reading syms from /usr/lib/valgrind/vgpreload_core-amd64-linux.so
+--4710--   Considering /usr/lib/valgrind/vgpreload_core-amd64-linux.so ..
+--4710--   .. CRC mismatch (computed 13d5e98a wanted 1786ecf1)
+--4710--    object doesn't have a symbol table
+--4710-- Reading syms from /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+--4710--   Considering /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so ..
+--4710--   .. CRC mismatch (computed 8f77ef36 wanted fcbde737)
+--4710--    object doesn't have a symbol table
+==4710== WARNING: new redirection conflicts with existing -- ignoring it
+--4710--     old: 0x0401f2f0 (strlen              ) R-> (0000.0) 0x58060901 ???
+--4710--     new: 0x0401f2f0 (strlen              ) R-> (2007.0) 0x04c32db0 strlen
+--4710-- REDIR: 0x401d360 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c33ee0 (strcmp)
+--4710-- REDIR: 0x401f830 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c374f0 (mempcpy)
+--4710-- Reading syms from /lib/x86_64-linux-gnu/libpthread-2.27.so
+--4710--   Considering /usr/lib/debug/.build-id/28/c6aade70b2d40d1f0f3d0a1a0cad1ab816448f.debug ..
+--4710--   .. build-id is valid
+--4710-- Reading syms from /lib/x86_64-linux-gnu/libc-2.27.so
+--4710--   Considering /lib/x86_64-linux-gnu/libc-2.27.so ..
+--4710--   .. CRC mismatch (computed b1c74187 wanted 042cc048)
+--4710--   Considering /usr/lib/debug/lib/x86_64-linux-gnu/libc-2.27.so ..
+--4710--   .. CRC is valid
+--4710-- REDIR: 0x50f9c70 (libc.so.6:memmove) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8d40 (libc.so.6:strncpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9f50 (libc.so.6:strcasecmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8790 (libc.so.6:strcat) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8d70 (libc.so.6:rindex) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50fb7c0 (libc.so.6:rawmemchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9de0 (libc.so.6:mempcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9c10 (libc.so.6:bcmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8d00 (libc.so.6:strncmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8800 (libc.so.6:strcmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9d40 (libc.so.6:memset) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x51170f0 (libc.so.6:wcschr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8ca0 (libc.so.6:strnlen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8870 (libc.so.6:strcspn) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9fa0 (libc.so.6:strncasecmp) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8840 (libc.so.6:strcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50fa0e0 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8da0 (libc.so.6:strpbrk) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f87c0 (libc.so.6:index) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f8c70 (libc.so.6:strlen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x51036c0 (libc.so.6:memrchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9ff0 (libc.so.6:strcasecmp_l) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9be0 (libc.so.6:memchr) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x5117eb0 (libc.so.6:wcslen) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9050 (libc.so.6:strspn) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9f20 (libc.so.6:stpncpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50f9ef0 (libc.so.6:stpcpy) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50fb7f0 (libc.so.6:strchrnul) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x50fa040 (libc.so.6:strncasecmp_l) redirected to 0x4a2a6e0 (_vgnU_ifunc_wrapper)
+--4710-- REDIR: 0x51e93c0 (libc.so.6:__strrchr_avx2) redirected to 0x4c32730 (rindex)
+--4710-- REDIR: 0x50f2070 (libc.so.6:malloc) redirected to 0x4c2faa0 (malloc)
+--4710-- REDIR: 0x51e91d0 (libc.so.6:__strchrnul_avx2) redirected to 0x4c37020 (strchrnul)
+--4710-- REDIR: 0x50f5030 (libc.so.6:calloc) redirected to 0x4c31a70 (calloc)
+--4710-- REDIR: 0x51e9590 (libc.so.6:__strlen_avx2) redirected to 0x4c32cf0 (strlen)
+--4710-- REDIR: 0x51e9ab0 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x4c37130 (mempcpy)
+Thread#1 try lock room#4
+Thread#1 success lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Thread#1 try lock room#4
+Loader# success left room#4
+Thread#2 try lock room#4
+Thread#2 success lock room#4
+Thread#0 try lock room#4
+Thread#2 try UNlock room#4
+Thread#2 success UNlock room#4
+Thread#0 try lock room#3
+Thread#0 success lock room#3
+Thread#0 try UNlock room#3
+Thread#0 success UNlock room#3
+Thread#1 try lock room#3
+Thread#1 success lock room#3
+Thread#1 try UNlock room#3
+Thread#1 success UNlock room#3
+Thread#2 try lock room#3
+Thread#2 success lock room#3
+Thread#2 try UNlock room#3
+Thread#2 success UNlock room#3
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Loader# try lock room#4
+Loader# locking room#4
+Thread#1 try lock room#3
+Thread#1 success lock room#3
+Thread#2 try lock room#3
+Thread#0 try lock room#3
+Loader# try UNlock room#4
+Loader# success left room#4
+Thread#1 try UNlock room#3
+Thread#1 success UNlock room#3
+Thread#0 try lock room#1
+Thread#0 success lock room#1
+Thread#0 try UNlock room#1
+Thread#0 success UNlock room#1
+Thread#1 try lock room#1
+Thread#1 success lock room#1
+Thread#2 try lock room#1
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#2 try lock room#1
+Thread#2 success lock room#1
+Thread#2 try UNlock room#1
+Thread#2 success UNlock room#1
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#0 try lock room#0
+Thread#2 try lock room#0
+Thread#1 try lock room#0
+Thread#0 success lock room#0
+Thread#0 try UNlock room#0
+Thread#0 success UNlock room#0
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#0 try lock room#0
+Thread#2 try lock room#0
+Thread#1 try lock room#0
+Loader# try lock room#1
+Thread#2 try lock room#0
+Thread#0 try lock room#0
+Thread#2 success lock room#0
+Thread#1 try lock room#0
+Loader# locking room#1
+Thread#2 try UNlock room#0
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#2 success UNlock room#0
+Thread#1 try lock room#2
+Thread#1 success lock room#2
+Thread#2 try lock room#2
+Thread#1 try UNlock room#2
+Thread#1 success UNlock room#2
+Thread#0 try lock room#1
+Thread#0 success lock room#1
+Loader# try lock room#0
+Thread#0 try UNlock room#1
+Thread#0 success UNlock room#1
+Loader# locking room#0
+Thread#2 try lock room#1
+Thread#2 success lock room#1
+Loader# try UNlock room#0
+Thread#2 try UNlock room#1
+Thread#2 success UNlock room#1
+Loader# success left room#0
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#1 try lock room#1
+Thread#1 success lock room#1
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#0 try lock room#3
+Thread#2 try lock room#3
+Thread#2 success lock room#3
+Thread#1 try lock room#3
+Thread#2 try UNlock room#3
+Thread#2 success UNlock room#3
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Thread#0 try lock room#3
+Thread#2 try lock room#3
+Loader# success left room#3
+Thread#1 try lock room#3
+Thread#0 success lock room#3
+Thread#0 try UNlock room#3
+Thread#0 success UNlock room#3
+Thread#2 try lock room#4
+Thread#1 try lock room#4
+Thread#0 try lock room#4
+Thread#2 success lock room#4
+Thread#2 try UNlock room#4
+Thread#2 success UNlock room#4
+Loader# try lock room#3
+Loader# locking room#3
+Thread#2 try lock room#0
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#0 try lock room#0
+Thread#1 try lock room#0
+Thread#2 success lock room#0
+Thread#2 try UNlock room#0
+Thread#2 success UNlock room#0
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Loader# success left room#4
+Thread#2 try lock room#4
+Thread#2 success lock room#4
+Thread#0 try lock room#4
+Thread#2 try UNlock room#4
+Thread#2 success UNlock room#4
+Thread#1 try lock room#4
+Thread#1 success lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#1 try lock room#1
+Thread#2 try lock room#1
+Thread#0 try lock room#1
+Thread#1 success lock room#1
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Loader# success left room#4
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Thread#1 try lock room#1
+Thread#0 try lock room#1
+Thread#2 try lock room#1
+Loader# success left room#1
+Thread#0 success lock room#1
+Thread#0 try UNlock room#1
+Thread#0 success UNlock room#1
+Thread#1 try lock room#2
+Thread#1 success lock room#2
+Thread#2 try lock room#2
+Thread#0 try lock room#2
+Thread#1 try UNlock room#2
+Thread#1 success UNlock room#2
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#0 try lock room#2
+Thread#2 try lock room#2
+Thread#1 try lock room#2
+Thread#0 try lock room#2
+Thread#0 success lock room#2
+Thread#1 try lock room#2
+Thread#0 try UNlock room#2
+Thread#0 success UNlock room#2
+Thread#2 try lock room#2
+Thread#2 success lock room#2
+Thread#2 try UNlock room#2
+Thread#2 success UNlock room#2
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#2 try lock room#2
+Thread#0 try lock room#2
+Thread#1 try lock room#2
+Thread#1 try lock room#2
+Thread#1 success lock room#2
+Thread#0 try lock room#2
+Thread#1 try UNlock room#2
+Thread#2 try lock room#2
+Thread#2 success lock room#2
+Thread#1 success UNlock room#2
+Thread#2 try UNlock room#2
+Thread#2 success UNlock room#2
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#1 try lock room#2
+Thread#2 try lock room#2
+Thread#0 try lock room#2
+Thread#2 try lock room#2
+Thread#2 success lock room#2
+Thread#1 try lock room#2
+Thread#0 try lock room#2
+Thread#2 try UNlock room#2
+Thread#2 success UNlock room#2
+Thread#0 try lock room#1
+Thread#0 success lock room#1
+Thread#1 try lock room#1
+Thread#2 try lock room#1
+Thread#0 try UNlock room#1
+Thread#0 success UNlock room#1
+Thread#2 success lock room#1
+Thread#2 try UNlock room#1
+Thread#2 success UNlock room#1
+Loader# try lock room#1
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#1 try lock room#1
+Thread#1 success lock room#1
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Loader# try lock room#1
+Loader# locking room#1
+Thread#1 try lock room#4
+Thread#1 success lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Thread#0 try lock room#4
+Thread#0 success lock room#4
+Thread#2 try lock room#4
+Thread#0 try UNlock room#4
+Thread#0 success UNlock room#4
+Loader# try UNlock room#1
+Loader# success left room#1
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Thread#0 try lock room#4
+Thread#0 success lock room#4
+Thread#0 try UNlock room#4
+Thread#0 success UNlock room#4
+Loader# success left room#4
+Thread#2 try lock room#4
+Thread#1 try lock room#4
+Thread#2 success lock room#4
+Thread#2 try UNlock room#4
+Thread#2 success UNlock room#4
+Thread#0 try lock room#3
+Thread#0 success lock room#3
+Thread#1 try lock room#3
+Thread#2 try lock room#3
+Thread#0 try UNlock room#3
+Thread#0 success UNlock room#3
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#1 try lock room#3
+Thread#0 try lock room#3
+Thread#2 try lock room#3
+Thread#1 success lock room#3
+Thread#1 try UNlock room#3
+Thread#1 success UNlock room#3
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Loader# success left room#4
+Thread#1 try lock room#4
+Thread#2 try lock room#4
+Thread#1 success lock room#4
+Thread#0 try lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#2 try lock room#0
+Thread#1 try lock room#0
+Thread#0 try lock room#0
+Thread#2 try lock room#0
+Thread#1 try lock room#0
+Thread#0 try lock room#0
+Thread#2 success lock room#0
+Loader# try lock room#4
+Loader# locking room#4
+Thread#2 try UNlock room#0
+Thread#2 success UNlock room#0
+Loader# try UNlock room#4
+Loader# success left room#4
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#0 try lock room#0
+Thread#0 success lock room#0
+Thread#2 try lock room#0
+Thread#1 try lock room#0
+Thread#0 try UNlock room#0
+Thread#0 success UNlock room#0
+Loader# try lock room#0
+Loader# locking room#0
+Thread#1 try lock room#1
+Thread#1 success lock room#1
+Thread#0 try lock room#1
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#2 try lock room#1
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try lock room#1
+Thread#1 try lock room#4
+Thread#0 try lock room#4
+Loader# locking room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#1 success lock room#4
+Thread#2 try lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Thread#0 try lock room#4
+Thread#0 success lock room#4
+Thread#2 try lock room#4
+Thread#0 try UNlock room#4
+Thread#1 try lock room#4
+Thread#0 success UNlock room#4
+Loader# success left room#4
+Thread#1 success lock room#4
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Thread#0 try lock room#0
+Thread#0 success lock room#0
+Thread#1 try lock room#0
+Thread#2 try lock room#0
+Thread#0 try UNlock room#0
+Thread#0 success UNlock room#0
+Loader# try lock room#4
+Loader# locking room#4
+Thread#1 try lock room#2
+Thread#1 success lock room#2
+Thread#2 try lock room#2
+Thread#1 try UNlock room#2
+Thread#1 success UNlock room#2
+Loader# try UNlock room#4
+Loader# success left room#4
+Thread#0 try lock room#2
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#1 try lock room#1
+Thread#0 try lock room#1
+Thread#2 try lock room#1
+Thread#0 try lock room#1
+Thread#0 success lock room#1
+Thread#2 try lock room#1
+Thread#0 try UNlock room#1
+Thread#0 success UNlock room#1
+Loader# try lock room#1
+Thread#2 try lock room#4
+Thread#2 success lock room#4
+Thread#1 try lock room#4
+Thread#2 try UNlock room#4
+Loader# locking room#1
+Thread#2 success UNlock room#4
+Loader# try UNlock room#1
+Loader# success left room#1
+Loader# try lock room#2
+Thread#2 try lock room#3
+Thread#2 success lock room#3
+Thread#1 try lock room#3
+Thread#0 try lock room#3
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#2 try UNlock room#3
+Thread#2 success UNlock room#3
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#2 try lock room#3
+Thread#0 try lock room#3
+Thread#1 try lock room#3
+Thread#2 try lock room#3
+Thread#2 success lock room#3
+Loader# try lock room#4
+Loader# locking room#4
+Thread#2 try UNlock room#3
+Thread#2 success UNlock room#3
+Thread#0 try lock room#2
+Thread#0 success lock room#2
+Loader# try UNlock room#4
+Thread#0 try UNlock room#2
+Loader# success left room#4
+Thread#0 success UNlock room#2
+Thread#1 try lock room#2
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Thread#0 try lock room#2
+Loader# success left room#2
+Thread#0 success lock room#2
+Thread#2 try lock room#2
+Thread#1 try lock room#2
+Thread#0 try UNlock room#2
+Thread#0 success UNlock room#2
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Thread#2 try lock room#0
+Thread#2 success lock room#0
+Thread#1 try lock room#0
+Thread#2 try UNlock room#0
+Thread#2 success UNlock room#0
+Thread#0 try lock room#0
+Thread#0 success lock room#0
+Thread#0 try UNlock room#0
+Thread#0 success UNlock room#0
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#1 try lock room#0
+Thread#1 success lock room#0
+Thread#1 try UNlock room#0
+Thread#1 success UNlock room#0
+Loader# try lock room#2
+Loader# locking room#2
+Thread#2 try lock room#4
+Thread#2 success lock room#4
+Thread#0 try lock room#4
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#2 try UNlock room#4
+Thread#1 try lock room#4
+Thread#2 success UNlock room#4
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Thread#0 try lock room#4
+Thread#0 success lock room#4
+Thread#1 try lock room#4
+Loader# success left room#4
+Thread#2 try lock room#4
+Thread#0 try UNlock room#4
+Thread#0 success UNlock room#4
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#1 try lock room#0
+Thread#2 try lock room#0
+--4710-- Reading syms from /lib/x86_64-linux-gnu/libgcc_s.so.1
+--4710--    object doesn't have a symbol table
+Thread#2 try lock room#0
+--4710-- REDIR: 0x50f2950 (libc.so.6:free) redirected to 0x4c30cd0 (free)
+Thread#1 try lock room#0
+Thread#1 success lock room#0
+Thread#2 try lock room#0
+Thread#1 try UNlock room#0
+Thread#1 success UNlock room#0
+Thread#2 try lock room#2
+Thread#2 success lock room#2
+Thread#2 try UNlock room#2
+Thread#2 success UNlock room#2
+Thread#1 try lock room#1
+Thread#1 success lock room#1
+Loader# try lock room#4
+Loader# locking room#4
+Thread#1 try UNlock room#1
+Thread#1 success UNlock room#1
+Loader# try UNlock room#4
+Loader# success left room#4
+Loader# try lock room#0
+Loader# locking room#0
+Loader# try UNlock room#0
+Loader# success left room#0
+Loader# try lock room#1
+Loader# locking room#1
+Thread#1 try lock room#4
+Thread#1 success lock room#4
+Thread#2 try lock room#1
+Loader# try UNlock room#1
+Loader# success left room#1
+Thread#1 try UNlock room#4
+Thread#1 success UNlock room#4
+Loader# try lock room#2
+Loader# locking room#2
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#2 try lock room#2
+Thread#2 try lock room#2
+Thread#2 success lock room#2
+Thread#2 try UNlock room#2
+Thread#2 success UNlock room#2
+Loader# try lock room#4
+Loader# locking room#4
+Loader# try UNlock room#4
+Loader# success left room#4
+Thread#2 try lock room#3
+Thread#2 success lock room#3
+Thread#2 try UNlock room#3
+Thread#2 success UNlock room#3
+Loader# try lock room#2
+Loader# locking room#2
+Thread#2 try lock room#0
+Thread#2 success lock room#0
+Loader# try UNlock room#2
+Loader# success left room#2
+Thread#2 try UNlock room#0
+Thread#2 success UNlock room#0
+Loader# try lock room#3
+Loader# locking room#3
+Loader# try UNlock room#3
+Loader# success left room#3
+Loader# try lock room#0
+Loader# locking room#0
+Thread#2 try lock room#4
+Thread#2 success lock room#4
+Loader# try UNlock room#0
+Loader# success left room#0
+Thread#2 try UNlock room#4
+Thread#2 success UNlock room#4
+Thread#2 try lock room#0
+Thread#2 success lock room#0
+Thread#2 try UNlock room#0
+Thread#2 success UNlock room#0
+*** stack smashing detected ***: <unknown> terminated
+==4710== 
+==4710== Process terminating with default action of signal 6 (SIGABRT)
+==4710==    at 0x5099E97: raise (raise.c:51)
+==4710==    by 0x509B800: abort (abort.c:79)
+==4710==    by 0x50E4896: __libc_message (libc_fatal.c:181)
+==4710==    by 0x518FCD0: __fortify_fail_abort (fortify_fail.c:33)
+==4710==    by 0x518FC91: __stack_chk_fail (stack_chk_fail.c:29)
+==4710==    by 0x1096EB: main (main.c:90)
+--4710-- Discarding syms at 0x7852ac0-0x7863685 in /lib/x86_64-linux-gnu/libgcc_s.so.1 due to munmap()
+==4710== 
+==4710== HEAP SUMMARY:
+==4710==     in use at exit: 0 bytes in 0 blocks
+==4710==   total heap usage: 10 allocs, 10 frees, 2,830 bytes allocated
+==4710== 
+==4710== All heap blocks were freed -- no leaks are possible
+==4710== 
+==4710== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==4710== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

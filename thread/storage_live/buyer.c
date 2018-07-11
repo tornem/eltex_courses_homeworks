@@ -1,45 +1,49 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
 #include "buyer.h"
 #include "structures.h"
 
-void StringRead(const char *writed, char *buf, int buf_size)
-{
-	for (int i = 0; i < buf_size; ++i) {
-		buf[i] = writed[i];
-	}
-}
-
 void* buyer(void* argv) {
-	srand(time(NULL));
+	//srand(time(NULL));
+	unsigned seed;
 	struct thread_param* th_id = (struct thread_param*)argv;
 	int num =  th_id->id;
-	int demand = 3000;  // customer demand for the product
-	char color[8];
+	int demand = 10000;  // customer demand for the product
+	char color[10];
 	switch (num) {
 		case 0 : 
-			StringRead(KGRN, color, 8);
+			strcpy(color, KGRN);
 			break;
 		case 1 :
-			StringRead(KBLU, color, 8);
+			strcpy(color, KBLU);
 			break;
 		case 2:
-			StringRead(KMAG, color, 8);
+			strcpy(color, KWHT);
 			break;
 	}
 
 	printf("\n%sBuyer #%d welcome!%s\n", color, num, KNRM);
 	while (demand > 0) {  
-		int n = rand() % (NUM_OF_ROOMS);  // generate random number in range [0,4]
+		seed = time(NULL);
+		int n = rand_r(&seed) % (NUM_OF_ROOMS);  // generate random number in range [0,4]
 
 		if ( (th_id->store->rooms[n]) != 0) {  // buyer check random room
+			fprintf(stderr, "Thread#%d try lock room#%d\n", num, n); 
 			if (pthread_mutex_trylock(&(th_id->store->mutex[n])) == 0) { // checking for room occupied and if 
+				fprintf(stderr, "Thread#%d success lock room#%d\n",num ,n); 
 				printf("%sBuyer #%d come in room #%d%s\n", color, num, n, KNRM);// room free go inside
 				demand -= th_id->store->rooms[n];  // take all product
 				th_id->store->rooms[n] = 0;		   // from room
 				printf("%s#%d: My demand now = %d%s\n", color, num, demand, KNRM);
-				pthread_mutex_unlock(&(th_id->store->mutex[n]));  // free room
+				fprintf(stderr, "Thread#%d try UNlock room#%d\n",num ,n); 
+				if((pthread_mutex_unlock(&(th_id->store->mutex[n])) != 0)) {  // free room
+					fprintf(stderr, "fail unlock room#%d by th#%d\n",n, num );
+					perror("pthread_mutex_unlock by thread#%d");
+				} else {
+					fprintf(stderr, "Thread#%d success UNlock room#%d\n",num ,n); 
+				}
 				sleep(2);
 			} else {
 				printf("%s#%d: Tried go room #%d, but she`s busy%s\n", color, num, n, KNRM);
@@ -49,6 +53,6 @@ void* buyer(void* argv) {
 		//sleep(2);
 	}
 
-	printf("\n%sBuyer #%d good buy!%s\n\n", color, num, KNRM);
+	printf("\n%sBuyer #%d good bye!%s\n\n", color, num, KNRM);
 	pthread_exit(EXIT_SUCCESS);
 }

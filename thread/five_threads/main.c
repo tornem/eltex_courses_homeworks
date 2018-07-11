@@ -13,6 +13,7 @@ int main ()
 {
 	pthread_t tid[5];  //thread ID
 	pthread_attr_t attr;  //thread attribuite
+	static int num[5];
 
 	pthread_attr_init(&attr);  //initializes default threads attributes
 
@@ -45,7 +46,6 @@ int main ()
 	printf("\nAfter division values:\n\n");
 	// для корректного присвоения каждому потоку своего числа
 	// заведем для каждого потока свои статичные переменные
-	static int num[5];
 	for (int counter = 0; counter < 5; ++counter) {
 		num[counter] = counter;
 	}
