@@ -28,7 +28,7 @@ int ListDir (struct PmPanel* win, WINDOW* status)
 			win->dir_num = temp_dir_num;
 			win->size = getmaxy(win->w_half) - 2;
 			win->list_begin = 0;
-			win->list_end = win->size;
+			win->list_end = win->size; 
 			win->y = 1;
 			win->x = 1;
 			win->selected_obj = 1;	
@@ -38,6 +38,7 @@ int ListDir (struct PmPanel* win, WINDOW* status)
 
 void RenderingListDir (struct PmPanel* win)
 {	
+    char buf[PATH_MAX];
 	werase(win->w_half);
 
 	int i = 0;
@@ -48,7 +49,8 @@ void RenderingListDir (struct PmPanel* win)
 	box(win->w_half, '|', '-');
 	werase(win->w_dir);
 	wattron(win->w_dir, A_UNDERLINE);
-	wprintw(win->w_dir, "%s" ,win->work_dir);
+    getcwd(buf, PATH_MAX);
+	wprintw(win->w_dir, "%s" ,buf);
 	wchgat(win->w_dir, -1, A_UNDERLINE, 1, NULL);
 }
 
@@ -80,7 +82,7 @@ void CoordControl (struct PmPanel* win)
 			} else {
 			//и это первый файл в директории
 				win->y = win->size - 1;  //установка курсора на самый последний объект в директории
-				win->list_begin = win->dir_num - win->size;  //сдвиг нижней границы буфера на размер окна
+                win->list_begin = win->dir_num - win->size;  //сдвиг нижней границы буфера на размер окна
 				win->list_end = win->dir_num - 1;  //установка верхней границы буфера 
 				win->selected_obj = win->dir_num - 1;  //drop co in end
 			}
