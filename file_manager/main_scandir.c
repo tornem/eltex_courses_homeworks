@@ -55,14 +55,12 @@ int main(int argc, char** argv)
 		exit(EXIT_FAILURE);
 	}
 
-	ListDir(&right_win, help_bar);
-	ListDir(&left_win, help_bar);
-
 	//rendering list objects within directory
+	ListDir(&left_win, help_bar);
 	RenderingListDir(&left_win);
-	RenderingListDir(&right_win);
 
-	//wrefresh(left_win.w_half);
+	ListDir(&right_win, help_bar);
+	RenderingListDir(&right_win);
 	
 
 	while (1) {

@@ -1,10 +1,12 @@
 #define _DEFAULT_SOURCE
-#include "common.h"
 #include <string.h>
+#include <sys/stat.h>
+#include "common.h"
 
 int ListDir (struct PmPanel* win, WINDOW* status)
 {
-	
+	struct stat sb;
+
 	if ( !(strcmp(win->work_dir, "..")) ) {  // if user select ".."
 		char *buff = malloc(PATH_MAX);  
 		chdir("..");  // climb the hierarchy above
@@ -32,6 +34,22 @@ int ListDir (struct PmPanel* win, WINDOW* status)
 			win->y = 1;
 			win->x = 1;
 			win->selected_obj = 1;	
+
+			for (int i = 0; i < win->dir_num; ++i) {
+                if (lstat((win->name_list[i]->d_name), &sb) == -1) {
+                    perror("lstat");
+                    exit(EXIT_FAILURE);
+                }
+                if (S_ISDIR(sb.st_mode)) {
+                    (win->name_list[i]->d_type) = DT_DIR;
+                } else if (S_ISREG(sb.st_mode)) {
+                    if (S_ISEXEC(sb.st_mode)) {
+                        (win->name_list[i]->d_type) = DT_EXEC;
+                    } else {
+                        (win->name_list[i]->d_type) = DT_REG;
+                    }
+                } 
+			}
 		}
 	return 0;
 }
@@ -43,7 +61,15 @@ void RenderingListDir (struct PmPanel* win)
 
 	int i = 0;
 	for (int cnt = win->list_begin; cnt < win->dir_num; ++cnt) {
-		mvwprintw(win->w_half, i, 1, "%s", win->name_list[cnt]->d_name);
+		if ((win->name_list[cnt]->d_type) == DT_DIR) {
+            mvwprintw(win->w_half, i, 1, "/%s", win->name_list[cnt]->d_name);
+        } else if ((win->name_list[cnt]->d_type) == DT_EXEC){
+            mvwprintw(win->w_half, i, 1, "%s*", win->name_list[cnt]->d_name);
+        } else if ((win->name_list[cnt]->d_type) == DT_REG){
+            mvwprintw(win->w_half, i, 1, "%s", win->name_list[cnt]->d_name);
+        } else {
+            mvwprintw(win->w_half, i, 1, "%s", win->name_list[cnt]->d_name);            
+        }
 		i++;
 	}
 	box(win->w_half, '|', '-');

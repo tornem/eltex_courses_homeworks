@@ -11,6 +11,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <linux/limits.h>
+#include <sys/types.h>
+
+#define DT_EXEC 16
+#define S_ISEXEC(mode) ((mode) & __S_IEXEC)
 
 struct PmPanel {
 	
@@ -28,6 +32,8 @@ struct PmPanel {
 	struct dirent** name_list;  // list of object inside directory from scandir()
 
 	char* work_dir;  // working directory for the process
+
+	// mode_t st_mod;  // object type
 
 	bool active;
 
