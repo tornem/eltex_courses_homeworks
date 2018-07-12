@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <linux/limits.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 
 #define DT_EXEC 16
 #define S_ISEXEC(mode) ((mode) & __S_IEXEC)

@@ -3,7 +3,7 @@
 void sig_winch(int signo)
 {
 	struct winsize size;
-	ioctl(fileno(stdout), TIOCGWINSZ, (char *) &size);
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, (char *) &size);
 	resizeterm(size.ws_row, size.ws_col);
 }
 
@@ -29,6 +29,7 @@ int main(int argc, char** argv)
 	getmaxyx(stdscr, max_y, max_x);  //get max nlines and ncolons by terminal size
 	init_pair(1, COLOR_WHITE, COLOR_BLUE);  //init colors pair
 	init_pair(2, COLOR_RED, COLOR_GREEN);
+	init_pair(3, COLOR_MAGENTA, COLOR_BLUE);
 
 	//initialisation half-main windows
 	Init_main_win(&left_win, max_y, max_x, 0);
@@ -56,11 +57,11 @@ int main(int argc, char** argv)
 	}
 
 	//rendering list objects within directory
-	ListDir(&left_win, help_bar);
-	RenderingListDir(&left_win);
-
 	ListDir(&right_win, help_bar);
 	RenderingListDir(&right_win);
+
+	ListDir(&left_win, help_bar);
+	RenderingListDir(&left_win);
 	
 
 	while (1) {
@@ -87,7 +88,11 @@ int main(int argc, char** argv)
 		switch (ch) {
 			case KEY_UP:
 				if (left_win.active) {
-					wchgat(left_win.w_half, -1, 0, 1, NULL);
+					if (left_win.name_list[left_win.selected_obj]->d_type == DT_EXEC) {
+						wchgat(left_win.w_half, -1, A_BOLD, 3, NULL);						
+					} else {
+						wchgat(left_win.w_half, -1, 0, 1, NULL);
+					}
 					--left_win.y;
 					--left_win.selected_obj;
 					CoordControl(&left_win);
@@ -98,7 +103,11 @@ int main(int argc, char** argv)
 
 					mvwchgat(left_win.w_half, left_win.y, left_win.x, -1, A_BOLD, 1, NULL);
 				} else {
-					wchgat(right_win.w_half, -1, 0, 1, NULL);
+					if (right_win.name_list[right_win.selected_obj]->d_type == DT_EXEC) {
+						wchgat(right_win.w_half, -1, A_BOLD, 3, NULL);						
+					} else {
+						wchgat(right_win.w_half, -1, 0, 1, NULL);
+					}
 					--right_win.y;
 					--right_win.selected_obj;
 					CoordControl(&right_win);
@@ -112,7 +121,11 @@ int main(int argc, char** argv)
 				break;
 			case KEY_DOWN:
 				if (left_win.active) {
-					wchgat(left_win.w_half, -1, 0, 1, NULL);
+					if (left_win.name_list[left_win.selected_obj]->d_type == DT_EXEC) {
+						wchgat(left_win.w_half, -1, A_BOLD, 3, NULL);						
+					} else {
+						wchgat(left_win.w_half, -1, 0, 1, NULL);
+					}
 					++left_win.y;
 					++left_win.selected_obj;
 					CoordControl(&left_win);
@@ -123,7 +136,11 @@ int main(int argc, char** argv)
 					
 					mvwchgat(left_win.w_half, left_win.y, left_win.x, -1, A_BOLD, 1, NULL);
 				} else {
-					wchgat(right_win.w_half, -1, 0, 1, NULL);
+					if (right_win.name_list[right_win.selected_obj]->d_type == DT_EXEC) {
+						wchgat(right_win.w_half, -1, A_BOLD, 3, NULL);						
+					} else {
+						wchgat(right_win.w_half, -1, 0, 1, NULL);
+					}
 					++right_win.y;
 					++right_win.selected_obj;
 					CoordControl(&right_win);

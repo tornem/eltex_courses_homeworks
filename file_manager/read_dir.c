@@ -1,6 +1,5 @@
 #define _DEFAULT_SOURCE
 #include <string.h>
-#include <sys/stat.h>
 #include "common.h"
 
 int ListDir (struct PmPanel* win, WINDOW* status)
@@ -64,7 +63,9 @@ void RenderingListDir (struct PmPanel* win)
 		if ((win->name_list[cnt]->d_type) == DT_DIR) {
             mvwprintw(win->w_half, i, 1, "/%s", win->name_list[cnt]->d_name);
         } else if ((win->name_list[cnt]->d_type) == DT_EXEC){
+			wattron(win->w_half, COLOR_PAIR(3) | A_BOLD);
             mvwprintw(win->w_half, i, 1, "%s*", win->name_list[cnt]->d_name);
+        	wattroff(win->w_half, COLOR_PAIR(3) | A_BOLD);
         } else if ((win->name_list[cnt]->d_type) == DT_REG){
             mvwprintw(win->w_half, i, 1, "%s", win->name_list[cnt]->d_name);
         } else {
