@@ -124,9 +124,30 @@ void CoordControl (struct PmPanel* win)
 		} else if ((win->y) >= (win->dir_num)) {
 		//достигнут последний файл в директории
 			win->y = 1;  //переводим курсов на первый файл
-			win->list_end = win->dir_num;  //проверить!!!!!!!!!
+			win->list_end = win->dir_num;  
 			win->selected_obj = 1;  //drop
 		}
 	}
 }
 
+int TryExec (char *path_name)
+{
+	endwin();
+	int cpid = fork();
+	
+	switch (cpid) {
+		case 0 :
+			execl(path_name, path_name);
+			exit(EXIT_FAILURE);
+		case -1 :
+			initscr();
+			return -1;
+		default :
+			wait(NULL);
+			printf("Press any key for continue...\n");
+			getchar();
+			initscr();
+			return 0;
+	}
+
+}

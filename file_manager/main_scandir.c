@@ -76,6 +76,7 @@ int main(int argc, char** argv)
 		wnoutrefresh(left_win.w_half);
 		wnoutrefresh(right_win.w_half);
 		wnoutrefresh(help_bar);
+		werase(help_bar);
 		wnoutrefresh(left_win.w_dir);
 		wnoutrefresh(right_win.w_dir);
 		doupdate();
@@ -96,7 +97,7 @@ int main(int argc, char** argv)
 					--left_win.y;
 					--left_win.selected_obj;
 					CoordControl(&left_win);
-					werase(help_bar);
+					
 					wprintw(help_bar, "y=%d dir=%d le=%d ls=%d ws=%d co=%d", 
 							left_win.y, left_win.dir_num, left_win.list_end, 
 							left_win.list_begin, left_win.size, left_win.selected_obj);
@@ -111,7 +112,6 @@ int main(int argc, char** argv)
 					--right_win.y;
 					--right_win.selected_obj;
 					CoordControl(&right_win);
-					werase(help_bar);
 					wprintw(help_bar, "y=%d dir=%d le=%d ls=%d ws=%d co=%d", 
 							right_win.y, right_win.dir_num, right_win.list_end, 
 							right_win.list_begin, right_win.size, right_win.selected_obj);
@@ -129,7 +129,6 @@ int main(int argc, char** argv)
 					++left_win.y;
 					++left_win.selected_obj;
 					CoordControl(&left_win);
-					werase(help_bar);
 					wprintw(help_bar, "y=%d dir=%d le=%d ls=%d ws=%d co=%d", 
 							left_win.y, left_win.dir_num, left_win.list_end, 
 							left_win.list_begin, left_win.size, left_win.selected_obj);
@@ -144,7 +143,6 @@ int main(int argc, char** argv)
 					++right_win.y;
 					++right_win.selected_obj;
 					CoordControl(&right_win);
-					werase(help_bar);
 					wprintw(help_bar, "y=%d dir=%d le=%d ls=%d ws=%d co=%d", 
 							right_win.y, right_win.dir_num, right_win.list_end, 
 							right_win.list_begin, right_win.size, right_win.selected_obj);
@@ -165,19 +163,23 @@ int main(int argc, char** argv)
 					wchgat(left_win.w_half, -1, A_BOLD, 1, NULL);
 				}
 				break;
-			case 10:  //10 - code for ENTRE symbol.
+			case 10:  //10 - code for ENTER symbol.
 				if (left_win.active) {
-					left_win.work_dir = left_win.name_list[left_win.selected_obj]->d_name;
-					werase(help_bar);
-					if (ListDir(&left_win, help_bar) == -1) {
-						break;
+					if ((left_win.name_list[left_win.selected_obj]->d_type) == DT_EXEC) {
+						if ((TryExec(left_win.name_list[left_win.selected_obj]->d_name)) == -1) {
+							perror("TryExec");
+						} 
 					} else {
-						left_win.selected_obj = 1;
-			}
+						left_win.work_dir = left_win.name_list[left_win.selected_obj]->d_name;
+						if (ListDir(&left_win, help_bar) == -1) {
+							break;
+						} else {
+							left_win.selected_obj = 1;
+						}
+					}
 					RenderingListDir(&left_win);
 				} else {
 					right_win.work_dir = right_win.name_list[right_win.selected_obj]->d_name;
-					werase(help_bar);
 					if (ListDir(&right_win, help_bar) == -1) {
 						break;
 					} else {
@@ -187,7 +189,6 @@ int main(int argc, char** argv)
 				}
 				break;
 		}
-		doupdate();
 	}
 	
 	free(buff_curr_dir);

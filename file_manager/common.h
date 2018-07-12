@@ -51,4 +51,6 @@ void CoordControl (struct PmPanel* win);
 
 int ScrOrDir (int scr, int num_dir);
 
+int TryExec (char *path_name);
+
 #endif
