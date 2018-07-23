@@ -8,17 +8,22 @@
 #include <sys/msg.h>
 
 #include <netinet/in.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 #include <sys/epoll.h>
 
-#define EPOLL_QUEUE_LEN 5
+#include "msgbuf_struct.h"
+
+#define TCP_REQUEST 1
+#define UDP_REQUEST 2
 
 int main() 
 {
-    int listen_socket_tcp, listen_socket_udp;
-    int epfd;
-    int msqfd;
+    int listen_socket_tcp, listen_socket_udp;  
     int client_sock;
+    int epfd;                                  // epoll fd
+    int msqfd;                                 // message queue fd
 
     socklen_t client_addr_len;
 
@@ -29,6 +34,7 @@ int main()
     struct epoll_event ev_tcp_socket; 
     struct epoll_event ev_udp_socket;
     struct epoll_event triggered;
+    struct msgbuf request;
 
     memset(&server_addr, 0, sizeof(server_addr));  // init zeros server_addr
     // filling server_addr with server information
@@ -42,7 +48,7 @@ int main()
         perror("msgget");
         exit(EXIT_FAILURE);
     }
-
+    printf("Queue created with id#%d\n", msqfd);
     // create listen socket which waiting new request
     // and put them in the queue.
 
@@ -77,10 +83,14 @@ int main()
         exit(EXIT_FAILURE);
     }
 
+    printf("TCP and UDP sockets created with IP:%s ", 
+                        inet_ntoa(server_addr.sin_addr));
+    printf("port:%s\n", "2018");
+
     // use epoll for servers tcp/udp clients
 
     // create epoll
-    epfd = epoll_create(EPOLL_QUEUE_LEN);
+    epfd = epoll_create(1);
     if (epfd == -1) {
         perror("epoll_create");
         exit(EXIT_FAILURE);
@@ -94,29 +104,71 @@ int main()
     // add fd of udp in watch sequance
     ev_udp_socket.events = EPOLLIN;
     ev_udp_socket.data.fd = listen_socket_udp; 
-    if (epoll_ctl(epfd, EPOLL_CTL_ADD, listen_socket_udp, &ev_udp_socket) == -1) {
+    if (epoll_ctl(epfd, EPOLL_CTL_ADD, listen_socket_udp, 
+                    &ev_udp_socket) == -1) {
         perror("epoll_ctl");
         exit(EXIT_FAILURE);
     }
 
+    printf("\nWaiting connections...\n");
+    // wait event
     if (epoll_wait(epfd, &triggered, 1, -1) == -1) {
         perror("epoll_wait");
         exit(EXIT_FAILURE);
     }
 
+    // TCP client send request
     if (triggered.data.fd == listen_socket_tcp) {
         client_addr_len = sizeof(clients_request);
-        client_sock = accept(listen_socket_tcp, (struct sockaddr *) &clients_request, &client_addr_len);
+        client_sock = accept(listen_socket_tcp, 
+                            (struct sockaddr *) &clients_request, 
+                            &client_addr_len);
         if (client_sock == -1) {
                 perror("accept");
                 exit(EXIT_FAILURE);
         }
-        
+        printf("Client connected from IP:%s\n", 
+                inet_ntoa(clients_request.sin_addr));
+        // form an request from client
+        request.mtype = TCP_REQUEST;
+        recv(client_sock, request.mtext, MSG_SIZE, 0);  
+        if (msgsnd(msqfd, (void *) &request, sizeof(request), 0) == -1) {
+            perror("msgsnd tcp");
+            exit(EXIT_FAILURE);
+        }
+        printf("A request from the client was added to the queue.\n");
+        printf("Type:%d\n", TCP_REQUEST);
+        printf("Message:%s\n", request.mtext);
     } else if (triggered.data.fd == listen_socket_udp) {
-        printf("UDP try connect\n");
+        client_addr_len = sizeof(request.data.client_addr);
+        request.mtype = UDP_REQUEST;
+        if (recvfrom(listen_socket_udp, request.mtext, MSG_SIZE, 0, 
+            (struct sockaddr *) &(request.data.client_addr), &client_addr_len) == -1) {
+            perror("recvfrom");
+            exit(EXIT_FAILURE);
+        }
+        if (msgsnd(msqfd, (void *) &request, sizeof(request), 0) == -1) {
+            perror("msgsnd tcp");
+            exit(EXIT_FAILURE);
+        }
+        printf("A request from the client was added to the queue.\n");
+        printf("Type:%d\n", UDP_REQUEST);
+        printf("Message:%s\n", request.mtext);
     }
 
+    // test 
+        
+        msgrcv(msqfd, (void *) &request, sizeof(request), request.mtype, 0);
+        printf("%s\n", inet_ntoa(request.data.client_addr.sin_addr));
+        printf("%d\n", ntohs(request.data.client_addr.sin_port));
 
+    // test
+
+    // deleted queue
+    if (msgctl(msqfd, IPC_RMID, 0) == -1) {
+        perror("msgctl delet");
+        exit(EXIT_FAILURE);
+    }
 
     close(epfd);
     close(listen_socket_udp);
