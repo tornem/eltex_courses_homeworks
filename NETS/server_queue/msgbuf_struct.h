@@ -1,3 +1,6 @@
+#ifndef __MSGBUFSTRUCT_H
+#define __MSGBUFSTRUCT_H
+
 #include <netinet/in.h>
 
 #define MSG_SIZE 80
@@ -14,3 +17,5 @@ struct msgbuf {
     char mtext[MSG_SIZE];
     client_data_t data;
 };
+
+#endif

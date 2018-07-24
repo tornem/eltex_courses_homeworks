@@ -11,16 +11,14 @@
 #include <string.h>
 
 #include "msgbuf_struct.h"
-
-#define SLEEP 10
-#define CHOOSE 20
-#define WORK_TCP 30
-#define WORK_UDP 40
+#include "service_pool.h"
 
 int ServicingRequestUDP(struct msgbuf request)
 {
     char test_message[] = "POOP";
     int sock_sender;
+
+    struct sockaddr_in client_addr = request.data.client_addr;
 
     // struct sockaddr_in service_thread_addr;
     // memset(service_thread_addr, 0, sizeof(service_thread_addr));
@@ -30,7 +28,11 @@ int ServicingRequestUDP(struct msgbuf request)
     sock_sender = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     sendto(sock_sender, test_message, sizeof(test_message), 0, 
-            (struct sockaddr *) *(request.data.client_addr), sizeof(request.data.client_addr));
+            (struct sockaddr *) &client_addr, sizeof(request.data.client_addr));
+
+    printf("UDP request processed\n");
+    close(sock_sender);
+    return EXIT_SUCCESS;
 }
 
 int ServicingRequestTCP(struct msgbuf request)
@@ -41,13 +43,14 @@ int ServicingRequestTCP(struct msgbuf request)
     send(send_sock, test_message, sizeof(test_message), 0);
     // (TODO) catch send errors
 
+    printf("TCP request processed\n");
     close (send_sock);
     return EXIT_SUCCESS;
 }
 
 void* ServiceRoutine(void* argv)
 {
-    int msqfd = (int) argv;
+    int msqfd = *((int*) argv);
     int state = SLEEP;
     struct msgbuf request;
 
@@ -65,10 +68,12 @@ void* ServiceRoutine(void* argv)
                 }
                 break;
             case WORK_TCP:
+                printf("TCP request processing started\n");
                 ServicingRequestTCP(request);
                 state = SLEEP;
                 break;
             case WORK_UDP:
+                printf("UDP request processing started\n");
                 ServicingRequestUDP(request);
                 state = SLEEP;
                 break;
@@ -90,6 +95,7 @@ int GenerationServiceThreads(int num_thread, int msqfd)
         return EXIT_FAILURE;
     }
 
+    printf("Start procces of generation service pool\n");
     for (int i = 0; i < num_thread; ++i) {
         if (pthread_create(&service_threads[i], &thread_attr, ServiceRoutine, &msqfd) != 0) {
             perror("pthread_create");
@@ -97,12 +103,12 @@ int GenerationServiceThreads(int num_thread, int msqfd)
         }
     }
 
-    for (int i = 0; i < num_thread; ++i) {
-        if (pthread_join(service_threads[i], NULL) != 0) {
-            perror("pthread_join");
-            exit(EXIT_FAILURE);
-        }
-    }
+    // for (int i = 0; i < num_thread; ++i) {
+    //     if (pthread_join(service_threads[i], NULL) != 0) {
+    //         perror("pthread_join");
+    //         exit(EXIT_FAILURE);
+    //     }
+    // }
 
     return EXIT_SUCCESS;
 } 

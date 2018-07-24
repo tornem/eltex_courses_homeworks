@@ -16,6 +16,7 @@
 #include <sys/epoll.h>
 
 #include "msgbuf_struct.h"
+#include "service_pool.h"
 
 volatile bool terminating = false;
 
@@ -75,6 +76,10 @@ int main()
         exit(EXIT_FAILURE);
     }
     printf("Queue created with id#%d\n", msqfd);
+    
+    // create thread service poll
+    GenerationServiceThreads(2, msqfd);
+
     // create listen socket which waiting new request
     // and put them in the queue.
 
@@ -193,13 +198,7 @@ int main()
         }
     }
 
-    // test 
-        
-        // msgrcv(msqfd, (void *) &request, sizeof(request), request.mtype, 0);
-        // printf("%s\n", inet_ntoa(request.data.client_addr.sin_addr));
-        // printf("%d\n", ntohs(request.data.client_addr.sin_port));
-
-    // test
+    
 
     // deleted queue
     if (msgctl(msqfd, IPC_RMID, 0) == -1) {
