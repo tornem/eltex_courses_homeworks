@@ -30,9 +30,9 @@ int main ()
 	unsigned int success_attr_init;
 	unsigned int success_mutex_init;
 	
-	pthread_t tid_loader;  // init 
-	pthread_t tid_buyer[NUM_OF_BUYERS];  // init tid`s for 4 buyers
-	pthread_attr_t attr;  // thread attribuite 
+	pthread_t tid_loader;  									 // init 
+	pthread_t tid_buyer[NUM_OF_BUYERS];  					 // init tid`s for 4 buyers
+	pthread_attr_t attr;  									 // thread attribuite 
 	pthread_mutex_t mutex_dupe = PTHREAD_MUTEX_INITIALIZER;  // init mutex by default attr
 															 // for dupe in struct storage store
 	struct storage store;  // init storage
@@ -47,12 +47,12 @@ int main ()
 	srand(time(NULL));  // set seed
 	
 	if ((success_attr_init = pthread_attr_init(&attr)) != 0) { // initializes default 
-		perror("pthread_attr_init");						   // attributes for threds
+		perror("pthread_attr_init");						   // attributes for threads
 		return EXIT_FAILURE;
 	}  
 
 	for (int counter = 0; counter < NUM_OF_ROOMS; ++counter) {  // filling storage
-		store.rooms[counter] = 1000 + (rand() % 201);  // generate 500+-100 products in storage
+		store.rooms[counter] = 1000 + (rand() % 201);  			// generate 500+-100 products in storage
 		printf("room[%d] = %d\n", counter, store.rooms[counter]);
 	}
 	
