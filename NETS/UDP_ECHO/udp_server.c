@@ -17,7 +17,10 @@ int main ()
     struct sockaddr_storage peer_addr;
     socklen_t peer_addr_len, my_addr_len; 
     char buf[BUF_SIZE];
+    const char serv_str[] = "server booo";
+    size_t len = BUF_SIZE - 1 - sizeof(serv_str);
     ssize_t read_byte, write_byte;
+
 
     fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (fd == -1) {
@@ -28,7 +31,7 @@ int main ()
     memset(&my_addr, 0, sizeof(my_addr));
     my_addr.sin_family = AF_INET;
     my_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    my_addr.sin_port = htons(2018);
+    my_addr.sin_port = htons(1414);
 
     if (bind(fd, (struct sockaddr*) &my_addr, sizeof(my_addr)) == -1) {
         perror("bind");
@@ -47,12 +50,20 @@ int main ()
         } 
         printf("%s\n", buf);
 
+        // message transformation
+        if (len == 0) {
+            fprintf(stderr, "message from client too large\n");
+        } else {
+            strncat(buf, serv_str, len);
+        }
+
         write_byte = sendto(fd, buf, BUF_SIZE, 0, (struct sockaddr*) &peer_addr, 
                     peer_addr_len);
         if (write_byte == -1) {
             perror("sendto");
             exit(EXIT_FAILURE);
         }
+        printf("Sended message: %s\n", buf);
         
     }
 
