@@ -20,15 +20,16 @@ int ServicingRequestUDP(struct msgbuf request)
 
     struct sockaddr_in client_addr = request.data.client_addr;
 
-    // struct sockaddr_in service_thread_addr;
-    // memset(service_thread_addr, 0, sizeof(service_thread_addr));
-    // service_thread_addr.sin_family = AF_INET;
-    // service_thread_addr.sin_addr = htonl(INADDR_LOOPBACK);
-
     sock_sender = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (sock_sender == -1) {
+        return EXIT_FAILURE;
+    }
 
-    sendto(sock_sender, test_message, sizeof(test_message), 0, 
-            (struct sockaddr *) &client_addr, sizeof(request.data.client_addr));
+    if (sendto(sock_sender, test_message, sizeof(test_message), 0, 
+            (struct sockaddr *) &client_addr, 
+            sizeof(request.data.client_addr)) == -1) {
+        return EXIT_FAILURE;
+    }
 
     printf("UDP request processed\n");
     close(sock_sender);
@@ -40,7 +41,10 @@ int ServicingRequestTCP(struct msgbuf request)
     int send_sock = request.data.fd;
     char test_message[] = "PIIIP";
 
-    send(send_sock, test_message, sizeof(test_message), 0);
+    if (send(send_sock, test_message, sizeof(test_message), 0) == -1) {
+        return EXIT_SUCCESS;
+    }
+
     // (TODO) catch send errors
 
     printf("TCP request processed\n");
@@ -51,32 +55,47 @@ int ServicingRequestTCP(struct msgbuf request)
 void* ServiceRoutine(void* argv)
 {
     int msqfd = *((int*) argv);
-    int state = SLEEP;
+    int state = SLEEP;  // primary state
     struct msgbuf request;
 
     while (true) {
         switch (state) {
             case SLEEP:
-                msgrcv(msqfd, (void *) &request, sizeof(request), 0, 0);
-                state = CHOOSE;
+                if (msgrcv(msqfd, (void *) &request, sizeof(request), 0, 0) == -1) {
+                    perror("msgrcv");
+                    pthread_exit(NULL);
+                } else {
+                    state = CHOOSE;
+                }
                 break;
             case CHOOSE:
                 if (request.mtype == TCP_REQUEST) {
                     state = WORK_TCP;
                 } else if (request.mtype == UDP_REQUEST) {
                     state = WORK_UDP;
+                } else {
+                    state = ERROR;
                 }
                 break;
             case WORK_TCP:
                 printf("TCP request processing started\n");
-                ServicingRequestTCP(request);
-                state = SLEEP;
+                if (ServicingRequestTCP(request) == -1) {
+                    state = ERROR;
+                } else {
+                    state = SLEEP;
+                }
                 break;
             case WORK_UDP:
                 printf("UDP request processing started\n");
-                ServicingRequestUDP(request);
-                state = SLEEP;
+                if (ServicingRequestUDP(request) == -1) {
+                    state = ERROR;
+                } else {
+                    state = SLEEP;
+                }
                 break;
+            case ERROR:
+                fprintf(stderr, "Error processing service. Restart...\n");
+                state = SLEEP;
             default:
                 break;
         }
@@ -96,19 +115,13 @@ int GenerationServiceThreads(int num_thread, int msqfd)
     }
 
     printf("Start procces of generation service pool\n");
-    for (int i = 0; i < num_thread; ++i) {
+    for (int i = 0; i < num_thread;) {
         if (pthread_create(&service_threads[i], &thread_attr, ServiceRoutine, &msqfd) != 0) {
             perror("pthread_create");
             continue;
         }
+        ++i;
     }
-
-    // for (int i = 0; i < num_thread; ++i) {
-    //     if (pthread_join(service_threads[i], NULL) != 0) {
-    //         perror("pthread_join");
-    //         exit(EXIT_FAILURE);
-    //     }
-    // }
 
     return EXIT_SUCCESS;
 } 

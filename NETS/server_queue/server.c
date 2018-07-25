@@ -22,12 +22,13 @@ volatile bool terminating = false;
 
 void TerminationHandler(int signum)
 {
-    fputs("Start close server\n", stdout);
+    fputs("\nStart close server\n", stdout);
     terminating = true;
 }
 
 int main() 
 {
+    setbuf(stdout, NULL);
     int listen_socket_tcp, listen_socket_udp;  
     int client_sock;
     int epfd;                                  // epoll fd
@@ -63,11 +64,6 @@ int main()
         perror("sigaction");
     }
 
-    memset(&server_addr, 0, sizeof(server_addr));  // init zeros server_addr
-    // filling server_addr with server information
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    server_addr.sin_port = htons(2018);
 
     // create message queue 
     msqfd = msgget(key, (IPC_CREAT | IPC_EXCL | 0666));
@@ -78,10 +74,19 @@ int main()
     printf("Queue created with id#%d\n", msqfd);
     
     // create thread service poll
-    GenerationServiceThreads(2, msqfd);
+    if (GenerationServiceThreads(2, msqfd) == -1) {
+        fprintf(stderr, "Error generation sirvice thread poll\n");
+        exit(EXIT_FAILURE);
+    }
 
     // create listen socket which waiting new request
     // and put them in the queue.
+
+    memset(&server_addr, 0, sizeof(server_addr));  // init zeros server_addr
+    // filling server_addr with server information
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    server_addr.sin_port = htons(2018);
 
     // TCP socket
     listen_socket_tcp = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -141,14 +146,14 @@ int main()
         exit(EXIT_FAILURE);
     }
     while (true) {
-        if (terminating) {
-            break;
-        }
         printf("\nWaiting connections...\n");
         // wait event
         if (epoll_wait(epfd, &triggered, 1, -1) == -1) {
             perror("epoll_wait");
-            exit(EXIT_FAILURE);
+            //exit(EXIT_FAILURE);
+        }
+        if (terminating) {
+            goto terminating;
         }
 
         // Dependin on which protocol (tcp/udp) the client is using, 
@@ -177,8 +182,8 @@ int main()
                 exit(EXIT_FAILURE);
             }
             printf("A request from the client was added to the queue.\n");
-            printf("Type:%d ", TCP_REQUEST);
-            printf("message:%s\n", request.mtext);
+            // printf("Type:%d ", TCP_REQUEST);
+            // printf("message:%s\n", request.mtext);
         } else if (triggered.data.fd == listen_socket_udp) {
             // UDP client connected
             client_addr_len = sizeof(request.data.client_addr);
@@ -201,14 +206,17 @@ int main()
     
 
     // deleted queue
-    if (msgctl(msqfd, IPC_RMID, 0) == -1) {
-        perror("msgctl delet");
+    terminating: if (msgctl(msqfd, IPC_RMID, 0) == -1) {
+        perror("msgctl delet\n");
         exit(EXIT_FAILURE);
     }
+    printf("Queue is quite\n");
 
     close(epfd);
     close(listen_socket_udp);
     close(listen_socket_tcp);
-    exit(EXIT_SUCCESS);
 
+    printf("Sockets is quite\n");
+
+    exit(EXIT_SUCCESS);
 }
